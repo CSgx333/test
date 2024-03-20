@@ -1,0 +1,78 @@
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using WebAPI.Model;
+
+namespace WebAPI.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ExcelDataController : ControllerBase
+    {
+        private static List<ExcelDataModel> excelDataList = new List<ExcelDataModel>();
+
+        // GET: api/exceldata
+        [HttpGet]
+        public ActionResult<IEnumerable<ExcelDataModel>> GetExcelData()
+        {
+            return Ok(excelDataList);
+        }
+
+        // GET: api/exceldata/{id}
+        [HttpGet("{id}")]
+        public ActionResult<ExcelDataModel> GetExcelData(int id)
+        {
+            var data = excelDataList.Find(e => e.Id == id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
+        // POST: api/exceldata
+        [HttpPost]
+        public ActionResult<ExcelDataModel> CreateExcelData(ExcelDataModel data)
+        {
+            excelDataList.Add(data);
+            return CreatedAtAction(nameof(GetExcelData), new { id = data.Id }, data);
+        }
+
+        // PUT: api/exceldata/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateExcelData(int id, ExcelDataModel data)
+        {
+            var existingData = excelDataList.Find(e => e.Id == id);
+            if (existingData == null)
+            {
+                return NotFound();
+            }
+            existingData.Name = data.Name;
+            existingData.Age = data.Age;
+            return NoContent();
+        }
+
+        // DELETE: api/exceldata/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteExcelData(int id)
+        {
+            var data = excelDataList.Find(e => e.Id == id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            excelDataList.Remove(data);
+            return NoContent();
+        }
+    }
+}
+
+
+namespace WebAPI.Model
+{
+    public class ExcelDataModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+}
